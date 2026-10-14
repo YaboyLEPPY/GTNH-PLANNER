@@ -44,3 +44,7 @@ Catalogue gzip: 1,495,782 bytes versus 11,856,948 uncompressed. Search gzip: 1,4
 Commits are local and have not been pushed. Cloud `install_script` and `start_skill` were saved; review/save changes in environment settings and publish the prepared environment through the product to activate its snapshot. Publication of an environment is separate from deployment of the app. Live servers must restart in future tasks. Restoration of local-only commits in a fresh task is not independently verified.
 
 Highest-priority future improvements: a recipe export matching the quest release, more exact custom-NBT mappings, verified research/heat/multiblock constraints and casing bills, game-progress import, and human in-game usability feedback. Current limits remain visible in README and ARCHITECTURE.
+
+## Codespaces preview fix
+
+The original Vite default host policy reproduced HTTP 403 for a forwarded `*.app.github.dev` address. The configuration now permits only the exact preview host derived from `CODESPACE_NAME` and `GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN`. An actual Vite server launched with a simulated Codespaces name returned HTTP 200 with planner HTML for that host and still rejected an unrelated host with HTTP 403. Startup now checks readiness for up to 30 seconds and reports process failure/log output instead of immediately claiming success. External Codespaces forwarding itself is not accessible from this Codex machine; users must update their existing checkout and retry its forwarded preview.
