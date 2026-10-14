@@ -1,5 +1,13 @@
 # Horizon Foundry — practical GTNH planner
 
+## Open it in your browser
+
+Go to [this repository](https://github.com/YaboyLEPPY/GTNH-PLANNER), select **Code → Codespaces → Create codespace on main**. The included development-container configuration installs dependencies and downloads the pinned game data automatically. Initial preparation can take several minutes.
+
+Once preparation completes, the planner should open in a browser tab. If it does not, open the Codespace's **Ports** tab and click the browser/open icon beside **5173 · GTNH Planner**. Keep that port private (the default); no public website deployment is needed. Stop the Codespace when finished. GitHub's Codespaces quota/billing belongs to your account; creating one is a separate action you take on GitHub.
+
+The setup commands are validated in the Codex environment; a fresh GitHub Codespace has not been independently tested here. If startup fails, inspect `/tmp/horizon-foundry-dev.log` and the container setup log. The normal local setup below remains available.
+
 A local-first community companion for GT New Horizons: the complete official questbook, a quantity-first recipe calculator, shared gathering/stock ledger and editable multi-floor base planner. No account or hosted service is required. **Not an official GTNH product.**
 
 ## Use it while playing
