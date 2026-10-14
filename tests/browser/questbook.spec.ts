@@ -1,7 +1,57 @@
-import{test,expect}from'@playwright/test';
-test('all chapters reachable and Ender IO opens in its source MV chapter',async({page})=>{
- const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('/');await expect(page.locator('.chapter-card')).toHaveCount(47);await page.getByRole('button',{name:/Find Ender IO/}).click();await expect(page.locator('.result-list')).toBeVisible();await page.getByRole('button',{name:/IO, IO, It's Off to EnderIO We Go/}).click();await expect(page.locator('.graph-heading h2')).toHaveText('Tier 2 - MV');await expect(page.locator('.quest-detail h2')).toHaveText("IO, IO, It's Off to EnderIO We Go");await expect(page.locator('.quest-detail')).toContainText('Requirements');await expect(page.locator('.quest-detail')).toContainText('Rewards');await page.getByRole('button',{name:'Mark complete',exact:true}).click();await page.reload();await page.getByRole('button',{name:/Find Ender IO/}).click();await page.getByRole('button',{name:/IO, IO, It's Off to EnderIO We Go/}).click();await expect(page.getByRole('button',{name:'Completed',exact:true})).toBeVisible();expect(errors).toEqual([]);
+import { test, expect } from "@playwright/test";
+test("all chapters reachable and Ender IO opens in its source MV chapter", async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.goto("/");
+  await expect(page.locator(".chapter-card")).toHaveCount(47);
+  await page.getByRole("button", { name: /Find Ender IO/ }).click();
+  await expect(page.locator(".result-list")).toBeVisible();
+  await page
+    .getByRole("button", { name: /IO, IO, It's Off to EnderIO We Go/ })
+    .click();
+  await expect(page.locator(".graph-heading h2")).toHaveText("Tier 2 - MV");
+  await expect(page.locator(".quest-detail h2")).toHaveText(
+    "IO, IO, It's Off to EnderIO We Go",
+  );
+  await expect(page.locator(".quest-detail")).toContainText("Requirements");
+  await expect(page.locator(".quest-detail")).toContainText("Rewards");
+  await page
+    .getByRole("button", { name: "Mark complete", exact: true })
+    .click();
+  await page.reload();
+  await page.getByRole("button", { name: /Find Ender IO/ }).click();
+  await page
+    .getByRole("button", { name: /IO, IO, It's Off to EnderIO We Go/ })
+    .click();
+  await expect(
+    page.getByRole("button", { name: "Completed", exact: true }),
+  ).toBeVisible();
+  expect(errors).toEqual([]);
 });
-test('initial screen does not fetch full search or recipe catalog; mobile keyboard access',async({page})=>{
- const paths:string[]=[];page.on('request',r=>paths.push(r.url()));await page.setViewportSize({width:390,height:844});await page.goto('/');await expect(page.locator('.chapter-card')).toHaveCount(47);expect(paths.some(p=>p.endsWith('search.json')||p.endsWith('catalog.json'))).toBe(false);await page.keyboard.press('Tab');await expect(page.locator(':focus')).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:'test-results/questbook-mobile.png',fullPage:true});
+test("initial screen does not fetch full search or recipe catalog; mobile keyboard access", async ({
+  page,
+}) => {
+  const paths: string[] = [];
+  page.on("request", (r) => paths.push(r.url()));
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await expect(page.locator(".chapter-card")).toHaveCount(47);
+  expect(
+    paths.some(
+      (p) => p.includes("/search.json") || p.includes("/catalog.json"),
+    ),
+  ).toBe(false);
+  await page.keyboard.press("Tab");
+  await expect(page.locator(":focus")).toBeVisible();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page.screenshot({
+    path: "test-results/questbook-mobile.png",
+    fullPage: true,
+  });
 });

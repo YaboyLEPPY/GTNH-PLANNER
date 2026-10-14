@@ -8,3 +8,7 @@ public/assets/items/
 playwright-report/
 test-results/
 *.local
+
+.venv/
+*.tsbuildinfo
+public/data/catalog.json.gz

@@ -6,6 +6,7 @@ OUT=ROOT/'public/data'; CACHE=ROOT/'.sources'
 QREV='27e61fbea6e245df80839885460994aa0ef9da9f'; RREV='d200440ea31d0357068a294d7312acf1146de909'
 def write(path,data):
  path.parent.mkdir(parents=True,exist_ok=True);path.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':')))
+ if path.name in ['catalog.json','search.json','index.json'] or path.parent.name=='chapters':path.with_suffix('.json.gz').write_bytes(gzip.compress(path.read_bytes(),mtime=0))
 def strip(s):
  import re
  return re.sub('§.', '', str(s))
@@ -104,7 +105,7 @@ def run():
   for file in sorted(f.parent.glob('*.json')):
    if file.name=='QuestLine.json':continue
    d=normalize(json.loads(file.read_text()));id=uid(d);assert id in quests,(file,id)
-   nodes.append({'id':id,'name':quests[id]['name'],'icon':quests[id]['icon'],'prerequisites':quests[id]['prerequisites'],'x':d.get('x'),'y':d.get('y'),'width':d.get('sizeX',24),'height':d.get('sizeY',24),'raw':d});placements[id]+=1
+   nodes.append({'id':id,'name':quests[id]['name'],'icon':quests[id]['icon'],'prerequisites':quests[id]['prerequisites'],'logic':quests[id]['properties']['questLogic'],'isMain':bool(quests[id]['properties']['isMain']),'x':d.get('x'),'y':d.get('y'),'width':d.get('sizeX',24),'height':d.get('sizeY',24),'raw':d});placements[id]+=1
   chapters.append({'id':cid,'name':strip(prop['name']),'description':prop['desc'],'icon':enrich(prop['icon']),'nodes':nodes,'raw':json.loads(f.read_text()),'generated':False})
  chapters.sort(key=lambda c:order.index(c['id']) if c['id'] in order else len(order))
  orphan=[id for id in quests if id not in placements]
@@ -129,6 +130,9 @@ def run():
  assets=q/'config/betterquesting/resources/midnight'
  shutil.copy(assets/'textures/gui/midnight_gui.png',ROOT/'public/assets/midnight_gui.png')
  shutil.copy(assets/'bq_themes.json',ROOT/'public/assets/bq_themes.json')
+ theme=Image.open(assets/'textures/gui/midnight_gui.png')
+ theme.crop((0,104,24,128)).save(ROOT/'public/assets/quest-normal.png')
+ theme.crop((24,104,48,128)).save(ROOT/'public/assets/quest-main.png')
  licenses=ROOT/'docs/licenses';licenses.mkdir(parents=True,exist_ok=True)
  shutil.copy(q/'LICENSE',licenses/'GTNH-CC-BY-NC-SA-4.0.txt');shutil.copy(r/'README.md',licenses/'recipe-export-notice.md')
  with tarfile.open(OUT/'quest-source.tar.gz','w:gz') as t:t.add(source,arcname='DefaultQuests')
