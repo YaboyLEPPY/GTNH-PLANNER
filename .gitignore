@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.sources/
+public/data/recipes/
+public/data/catalog.json
+public/data/identity.json
+public/assets/items/
+playwright-report/
+test-results/
+*.local
