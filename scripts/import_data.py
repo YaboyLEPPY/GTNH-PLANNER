@@ -56,7 +56,7 @@ def run():
   meta=[]
   if gt>=0:
    for m in sl(ints[gt+4]):meta.append({'key':st(ints[m]),'value':struct.unpack_from('<d',data,(m+1)*4)[0]})
-  rec={'id':rid,'machine':st(ints[typ]),'inputs':inp,'outputs':out,'tier':ints[gt+3] if gt>=0 else -1,'voltage':ints[gt] if gt>=0 else 0,'ticks':ints[gt+1] if gt>=0 else None,'metadata':meta,'special':ints[gt+6] if gt>=0 else 0,'machines':[st(ints[z+4]) for z in sl(ints[typ+5])] + [st(ints[z+4]) for z in sl(ints[typ+3])]}
+  rec={'id':rid,'machine':st(ints[typ]),'inputs':inp,'outputs':out,'tier':ints[gt+3] if gt>=0 else -1,'voltage':ints[gt] if gt>=0 else 0,'amperage':ints[gt+2] if gt>=0 else None,'ticks':ints[gt+1] if gt>=0 else None,'metadata':meta,'special':ints[gt+6] if gt>=0 else 0,'machines':[st(ints[z+4]) for z in sl(ints[typ+5])] + [st(ints[z+4]) for z in sl(ints[typ+3])]}
   recipes[rid]=rec
   for x in out:
    if x['id'] in goods:outputs[x['id']].append(rid)
@@ -67,6 +67,7 @@ def run():
   if outputs[gid]:write(OUT/'recipes'/key[:2]/f'{key}.json',[recipes[x] for x in outputs[gid]])
  for key,bucket in buckets.items():write(OUT/'recipes'/f'{key}.json',bucket)
  write(OUT/'catalog.json',list(goods.values()))
+ write(OUT/'machines.json',sorted({r['machine'] for r in recipes.values()}))
  write(OUT/'identity.json',identity)
  # Atlas splits are generated locally: upstream export has no redistribution license.
  from PIL import Image
@@ -109,7 +110,7 @@ def run():
   chapters.append({'id':cid,'name':strip(prop['name']),'description':prop['desc'],'icon':enrich(prop['icon']),'nodes':nodes,'raw':json.loads(f.read_text()),'generated':False})
  chapters.sort(key=lambda c:order.index(c['id']) if c['id'] in order else len(order))
  orphan=[id for id in quests if id not in placements]
- chapters.append({'id':'unassigned','name':'Unassigned source quests','description':'These quests have no chapter placement in the source. This arrangement is generated, not an in-game chapter.','generated':True,'nodes':[{'id':id,'name':quests[id]['name'],'icon':quests[id]['icon'],'prerequisites':quests[id]['prerequisites'],'x':(i%9)*100,'y':(i//9)*100,'width':48,'height':48} for i,id in enumerate(orphan)]})
+ chapters.append({'id':'unassigned','name':'Unassigned source quests','description':'These quests have no chapter placement in the source. This arrangement is generated, not an in-game chapter.','generated':True,'nodes':[{'id':id,'name':quests[id]['name'],'icon':quests[id]['icon'],'prerequisites':quests[id]['prerequisites'],'logic':quests[id]['properties']['questLogic'],'isMain':bool(quests[id]['properties']['isMain']),'x':(i%9)*100,'y':(i//9)*100,'width':48,'height':48} for i,id in enumerate(orphan)]})
  index=[]
  for c in chapters:
   for node in c['nodes']:
@@ -135,7 +136,9 @@ def run():
  theme.crop((24,104,48,128)).save(ROOT/'public/assets/quest-main.png')
  licenses=ROOT/'docs/licenses';licenses.mkdir(parents=True,exist_ok=True)
  shutil.copy(q/'LICENSE',licenses/'GTNH-CC-BY-NC-SA-4.0.txt');shutil.copy(r/'README.md',licenses/'recipe-export-notice.md')
- with tarfile.open(OUT/'quest-source.tar.gz','w:gz') as t:t.add(source,arcname='DefaultQuests')
+ with (OUT/'quest-source.tar.gz').open('wb') as archive:
+  with gzip.GzipFile(filename='',mode='wb',fileobj=archive,mtime=0) as compressed:
+   with tarfile.open(fileobj=compressed,mode='w') as t:t.add(source,arcname='DefaultQuests')
  print(json.dumps({k:v for k,v in report.items() if k!='unresolvedQuestIdentities'},indent=2));print('Unresolved identities:',len(missing))
 
 def verify():

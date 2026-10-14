@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Search, Anvil, Plus, RotateCcw, Copy, Download } from "lucide-react";
-import { getCatalog, getRecipes, format } from "../data";
+import { getCatalog, getRecipes, format, load } from "../data";
 import type { Goods, SourceItem } from "../types";
 import {
   calculate,
@@ -123,7 +123,9 @@ export function Production({
   ) => void;
 }) {
   const [catalog, setCatalog] = useState<Goods[]>(),
-    [target, setTarget] = useState<Goods>(),
+    [machines, setMachines] = useState<string[]>([]),
+    [machineToAdd, setMachineToAdd] = useState("");
+  const [target, setTarget] = useState<Goods>(),
     [quantity, setQuantity] = useState(draft?.amount || 20),
     [tier, setTier] = useState(0),
     [boundary, setBoundary] = useState<CalcOptions["boundary"]>("ingots"),
@@ -139,6 +141,11 @@ export function Production({
   const controller = useRef<AbortController | null>(null);
   const map = useMemo(() => new Map(catalog?.map((g) => [g.id, g])), [catalog]);
   useEffect(() => {
+    load<string[]>("machines.json")
+      .then(setMachines)
+      .catch((e) => setError(e.message));
+  }, []);
+  useEffect(() => {
     getCatalog()
       .then((c) => {
         setCatalog(c);
@@ -147,6 +154,8 @@ export function Production({
       .catch((e) => setError(e.message));
   }, [draft]);
   useEffect(() => {
+    controller.current?.abort();
+    setBusy(false);
     setCalc(undefined);
     setMessage("");
   }, [target, quantity, tier, boundary, choices, stock]);
@@ -277,6 +286,82 @@ export function Production({
                   </select>
                 </label>
               </div>
+              <details>
+                <summary>Machine ownership (optional strict filter)</summary>
+                <label className="toolbar" style={{ margin: "12px 0" }}>
+                  <input
+                    type="checkbox"
+                    checked={choices.availableMachines !== undefined}
+                    onChange={(e) =>
+                      setChoices((c) => ({
+                        ...c,
+                        availableMachines: e.target.checked
+                          ? ["Crafting (Shaped)", "Crafting (Shapeless)"]
+                          : undefined,
+                      }))
+                    }
+                  />
+                  Only use recipe types I can run
+                </label>
+                {choices.availableMachines && (
+                  <>
+                    <div className="toolbar">
+                      <select
+                        className="machine-choice"
+                        aria-label="Available machine recipe type"
+                        value={machineToAdd}
+                        onChange={(e) => setMachineToAdd(e.target.value)}
+                      >
+                        <option value="">
+                          Choose a source machine / recipe type…
+                        </option>
+                        {machines.map((m) => (
+                          <option key={m}>{m}</option>
+                        ))}
+                      </select>
+                      <button
+                        onClick={() => {
+                          if (machineToAdd)
+                            setChoices((c) => ({
+                              ...c,
+                              availableMachines: [
+                                ...new Set([
+                                  ...(c.availableMachines || []),
+                                  machineToAdd,
+                                ]),
+                              ],
+                            }));
+                        }}
+                      >
+                        Add machine type
+                      </button>
+                    </div>
+                    <div className="toolbar" style={{ marginTop: 10 }}>
+                      {choices.availableMachines.map((m) => (
+                        <button
+                          key={m}
+                          aria-label={`Remove available ${m}`}
+                          onClick={() =>
+                            setChoices((c) => ({
+                              ...c,
+                              availableMachines: c.availableMachines?.filter(
+                                (x) => x !== m,
+                              ),
+                            }))
+                          }
+                        >
+                          {m} ×
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+                <p style={{ marginTop: 10, fontSize: 11 }}>
+                  With this enabled, unavailable machine recipes remain
+                  unresolved. Tier, research and special-condition checks still
+                  apply.
+                </p>
+              </details>
               <div className="toolbar" style={{ marginTop: 20 }}>
                 <button
                   className="primary"
@@ -543,7 +628,8 @@ function Step({
         <summary>
           <Icon goods={g} size={24} />
           <strong>
-            {format(n.needed)} {g?.name || `Unknown: ${n.id}`}
+            {format(n.needed)} {g?.kind === "fluid" ? "mB of " : ""}
+            {g?.name || `Unknown: ${n.id}`}
           </strong>
           <span className="tag">
             {n.recipe ? `${n.batches} batches` : n.reason || "Supplied"}
@@ -553,7 +639,7 @@ function Step({
           {n.fromStock > 0 && `${format(n.fromStock)} from stock. `}
           {n.fromSurplus > 0 && `${format(n.fromSurplus)} reused surplus. `}
           {n.recipe &&
-            `${n.output} produced; ${n.surplus} surplus. ${n.recipe.machine} · ${n.recipe.tier < 0 ? "Manual" : TIERS[n.recipe.tier] || n.recipe.tier} · ${n.recipe.voltage} EU/t · ${n.recipe.ticks === null ? "time not exported" : `${n.recipe.ticks / 20} seconds / batch`}.`}
+            `${n.output} ${g?.unit || "items"} produced; ${n.surplus} ${g?.unit || "items"} surplus. ${n.recipe.machine} · ${n.recipe.tier < 0 ? "Manual" : TIERS[n.recipe.tier] || n.recipe.tier} · ${n.recipe.voltage} EU/t · ${n.recipe.ticks === null ? "time not exported" : `${n.recipe.ticks / 20} seconds / batch`}.`}
         </p>
         {n.routes.length > 0 && (
           <label className="stacked">
@@ -634,7 +720,7 @@ function Step({
             {n.byproducts
               .map(
                 (x) =>
-                  `${format(x.amount)} ${catalog.get(x.id)?.name || x.id}${x.chance < 1 ? ` (${x.chance * 100}% chance)` : ""}`,
+                  `${format(x.amount)} ${catalog.get(x.id)?.kind === "fluid" ? "mB " : ""}${catalog.get(x.id)?.name || x.id}${x.chance < 1 ? ` (${x.chance * 100}% chance)` : ""}`,
               )
               .join(", ")}
           </p>

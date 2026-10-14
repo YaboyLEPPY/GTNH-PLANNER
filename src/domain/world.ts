@@ -177,6 +177,12 @@ export function validateWorld(input: unknown): World {
       throw new Error("Invalid production order.");
     const c = o.choices;
     if (
+      c.availableMachines !== undefined &&
+      (!Array.isArray(c.availableMachines) ||
+        !c.availableMachines.every((m) => text(m, 500)))
+    )
+      throw new Error("Invalid machine availability filter.");
+    if (
       !record(c.recipes) ||
       !record(c.alternatives) ||
       !Array.isArray(c.stops) ||

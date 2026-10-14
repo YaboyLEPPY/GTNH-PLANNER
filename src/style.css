@@ -1267,3 +1267,7 @@ td input {
 .quest-node > .node-status {
   z-index: 2;
 }
+.machine-choice {
+  max-width: 100%;
+  width: 320px;
+}

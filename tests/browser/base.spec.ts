@@ -69,6 +69,13 @@ test("base drawing, moving, resizing, floors, connections, undo/redo and reload"
   await expect(page.locator(".base-zone")).toHaveCount(2);
   await page.getByLabel("Base floor", { exact: true }).selectOption("3");
   await expect(page.locator(".base-zone")).toHaveCount(1);
+  await page.locator(".zone-label").first().click();
+  await page.getByRole("button", { name: "Delete selected zone" }).click();
+  await expect(page.locator(".base-zone")).toHaveCount(0);
+  await page
+    .getByRole("button", { name: "Undo base edit", exact: true })
+    .click();
+  await expect(page.locator(".base-zone")).toHaveCount(1);
   await page.screenshot({ path: "test-results/base.png", fullPage: true });
 });
 test("touch and keyboard alternatives work without overflowing a narrow screen", async ({

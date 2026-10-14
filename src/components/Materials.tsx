@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { Package, Plus, RotateCcw, Check, Trash2 } from "lucide-react";
 import type { Goods } from "../types";
 import { getCatalog, getRecipes, format } from "../data";
@@ -40,6 +40,8 @@ export function Materials({
     [unit, setUnit] = useState("items"),
     [status, setStatus] = useState(""),
     [completing, setCompleting] = useState("");
+  const worldRef = useRef(world);
+  worldRef.current = world;
   const map = useMemo(() => new Map(catalog?.map((g) => [g.id, g])), [catalog]);
   useEffect(() => {
     getCatalog()
@@ -96,6 +98,10 @@ export function Materials({
         boundary: o.boundary,
         choices: o.choices,
       });
+      if (worldRef.current !== world)
+        throw new Error(
+          "World changed during the stock check. Recalculate and complete again; nothing was deducted.",
+        );
       const missing = c.bill.filter((r) => r.missing > 0);
       const tools = Object.entries(c.catalysts).filter(
         ([id, n]) => (stock[id] || 0) < n,

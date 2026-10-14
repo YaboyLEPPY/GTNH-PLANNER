@@ -197,3 +197,31 @@ describe("quantity planning", () => {
     expect(inputs.get("1x Red Alloy Cable")).toBe(60);
   });
 });
+it("restricts routes to explicitly available machine types and supports MAX tier", async () => {
+  const c = await calculate(
+    [{ id: "target", amount: 1 }],
+    options(
+      [goods("target"), goods("ore", "Iron Ore")],
+      [{ ...recipe("r", "ore", 1, "target"), machine: "Assembler", tier: 0 }],
+      {
+        choices: {
+          recipes: {},
+          alternatives: {},
+          stops: [],
+          availableMachines: ["Crafting (Shaped)"],
+        },
+      },
+    ),
+  );
+  expect(c.steps).toBe(0);
+  expect(c.bill[0].reasons[0]).toContain("machine");
+  const d = await calculate(
+    [{ id: "target", amount: 1 }],
+    options(
+      [goods("target"), goods("ore", "Iron Ore")],
+      [{ ...recipe("max", "ore", 1, "target"), tier: 13 }],
+      { tier: 13 },
+    ),
+  );
+  expect(d.steps).toBe(1);
+});

@@ -13,6 +13,7 @@ export const TIERS = [
   "UIV",
   "UMV",
   "UXV",
+  "MAX",
 ];
 export interface Target {
   id: string;
@@ -20,6 +21,7 @@ export interface Target {
   label?: string;
 }
 export interface Choices {
+  availableMachines?: string[];
   recipes: Record<string, string>;
   alternatives: Record<string, string>;
   stops: string[];
@@ -184,6 +186,8 @@ export async function calculate(
       .filter(
         (r) =>
           r.tier <= o.tier &&
+          (!o.choices.availableMachines ||
+            o.choices.availableMachines.includes(r.machine)) &&
           r.outputs.some((x) => x.id === id && x.amount > 0 && x.chance === 1),
       )
       .sort((a, b) => score(a, id) - score(b, id));
@@ -197,9 +201,9 @@ export async function calculate(
         );
     if (!r) {
       node.reason = chosen
-        ? "Chosen recipe unavailable at this tier"
+        ? "Chosen recipe unavailable at this tier/machine selection"
         : all.length
-          ? "No deterministic recipe available at this tier"
+          ? "No deterministic recipe available with this tier/machine selection"
           : "No recipe — gather or add a manual requirement";
       add(id, quantity, 0, quantity, node.reason);
       warnings.add(node.reason);

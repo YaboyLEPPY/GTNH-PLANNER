@@ -12,3 +12,4 @@ test-results/
 .venv/
 *.tsbuildinfo
 public/data/catalog.json.gz
+public/data/machines.json

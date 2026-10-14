@@ -1,0 +1,254 @@
+{
+  "method": "Headless system Chromium, production Vite preview, local loopback, 1280×720 default viewport. Cold fresh browser context; warm reload after service worker activation; timings include Playwright readiness polling. Not a remote/device benchmark.",
+  "cold": {
+    "usableMs": 396.30000000074506,
+    "resources": [
+      {
+        "name": "/assets/index-DME_Pi8s.js",
+        "transferBytes": 72701,
+        "encodedBytes": 72401,
+        "durationMs": 47.299999999813735
+      },
+      {
+        "name": "/assets/index-BcoGCyDC.css",
+        "transferBytes": 5090,
+        "encodedBytes": 4790,
+        "durationMs": 25
+      },
+      {
+        "name": "/data/index.json.gz",
+        "transferBytes": 7588,
+        "encodedBytes": 7288,
+        "durationMs": 17.899999999441206
+      }
+    ]
+  },
+  "warm": {
+    "usableMs": 549.5999999996275,
+    "resources": [
+      {
+        "name": "/assets/index-DME_Pi8s.js",
+        "transferBytes": 0,
+        "encodedBytes": 228706
+      },
+      {
+        "name": "/assets/index-BcoGCyDC.css",
+        "transferBytes": 0,
+        "encodedBytes": 16919
+      },
+      {
+        "name": "/data/index.json.gz",
+        "transferBytes": 0,
+        "encodedBytes": 27163
+      },
+      {
+        "name": "/assets/items/48121.webp",
+        "transferBytes": 0,
+        "encodedBytes": 966
+      },
+      {
+        "name": "/assets/items/48727.webp",
+        "transferBytes": 0,
+        "encodedBytes": 386
+      },
+      {
+        "name": "/assets/items/48293.webp",
+        "transferBytes": 0,
+        "encodedBytes": 206
+      },
+      {
+        "name": "/assets/items/36911.webp",
+        "transferBytes": 0,
+        "encodedBytes": 206
+      },
+      {
+        "name": "/assets/items/8560.webp",
+        "transferBytes": 0,
+        "encodedBytes": 360
+      },
+      {
+        "name": "/assets/items/7673.webp",
+        "transferBytes": 0,
+        "encodedBytes": 686
+      },
+      {
+        "name": "/assets/items/8380.webp",
+        "transferBytes": 0,
+        "encodedBytes": 1058
+      },
+      {
+        "name": "/assets/items/23250.webp",
+        "transferBytes": 0,
+        "encodedBytes": 968
+      },
+      {
+        "name": "/assets/items/23279.webp",
+        "transferBytes": 0,
+        "encodedBytes": 1260
+      },
+      {
+        "name": "/assets/items/23926.webp",
+        "transferBytes": 0,
+        "encodedBytes": 1062
+      },
+      {
+        "name": "/assets/items/1812.webp",
+        "transferBytes": 0,
+        "encodedBytes": 836
+      },
+      {
+        "name": "/assets/items/22676.webp",
+        "transferBytes": 0,
+        "encodedBytes": 902
+      },
+      {
+        "name": "/assets/items/23975.webp",
+        "transferBytes": 0,
+        "encodedBytes": 1056
+      },
+      {
+        "name": "/assets/items/23931.webp",
+        "transferBytes": 0,
+        "encodedBytes": 1076
+      },
+      {
+        "name": "/assets/items/11060.webp",
+        "transferBytes": 0,
+        "encodedBytes": 886
+      },
+      {
+        "name": "/assets/items/47633.webp",
+        "transferBytes": 0,
+        "encodedBytes": 324
+      },
+      {
+        "name": "/assets/items/48694.webp",
+        "transferBytes": 0,
+        "encodedBytes": 298
+      },
+      {
+        "name": "/assets/items/9400.webp",
+        "transferBytes": 0,
+        "encodedBytes": 150
+      },
+      {
+        "name": "/assets/items/17967.webp",
+        "transferBytes": 0,
+        "encodedBytes": 1356
+      },
+      {
+        "name": "/assets/items/6764.webp",
+        "transferBytes": 0,
+        "encodedBytes": 886
+      },
+      {
+        "name": "/assets/items/22672.webp",
+        "transferBytes": 0,
+        "encodedBytes": 1022
+      },
+      {
+        "name": "/assets/items/25568.webp",
+        "transferBytes": 0,
+        "encodedBytes": 1096
+      },
+      {
+        "name": "/assets/items/22957.webp",
+        "transferBytes": 0,
+        "encodedBytes": 650
+      },
+      {
+        "name": "/assets/items/4939.webp",
+        "transferBytes": 0,
+        "encodedBytes": 176
+      },
+      {
+        "name": "/assets/items/20589.webp",
+        "transferBytes": 0,
+        "encodedBytes": 240
+      },
+      {
+        "name": "/assets/items/11085.webp",
+        "transferBytes": 0,
+        "encodedBytes": 326
+      },
+      {
+        "name": "/assets/items/9513.webp",
+        "transferBytes": 0,
+        "encodedBytes": 358
+      },
+      {
+        "name": "/assets/items/8824.webp",
+        "transferBytes": 0,
+        "encodedBytes": 126
+      },
+      {
+        "name": "/assets/items/14211.webp",
+        "transferBytes": 0,
+        "encodedBytes": 234
+      },
+      {
+        "name": "/assets/items/8319.webp",
+        "transferBytes": 0,
+        "encodedBytes": 218
+      },
+      {
+        "name": "/assets/items/12845.webp",
+        "transferBytes": 0,
+        "encodedBytes": 300
+      },
+      {
+        "name": "/assets/items/12120.webp",
+        "transferBytes": 0,
+        "encodedBytes": 438
+      },
+      {
+        "name": "/assets/items/4014.webp",
+        "transferBytes": 0,
+        "encodedBytes": 200
+      },
+      {
+        "name": "/assets/items/1505.webp",
+        "transferBytes": 0,
+        "encodedBytes": 730
+      },
+      {
+        "name": "/assets/items/13026.webp",
+        "transferBytes": 0,
+        "encodedBytes": 278
+      }
+    ]
+  },
+  "searchMs": 76.5,
+  "calculationMs": 1355.9000000003725,
+  "accessibility": [
+    {
+      "view": "Questbook",
+      "violations": []
+    },
+    {
+      "view": "Production",
+      "violations": []
+    },
+    {
+      "view": "Materials",
+      "violations": []
+    },
+    {
+      "view": "Base planner",
+      "violations": []
+    },
+    {
+      "view": "World & backup",
+      "violations": []
+    },
+    {
+      "view": "LV quest detail",
+      "violations": []
+    },
+    {
+      "view": "Circuit calculation",
+      "violations": []
+    }
+  ],
+  "offline": "Visited app shell and search available after network disabled"
+}

@@ -84,6 +84,7 @@ export interface Recipe {
   outputs: RecipeIO[];
   tier: number;
   voltage: number;
+  amperage?: number;
   ticks: number | null;
   metadata: { key: string; value: number }[];
   special: number;
